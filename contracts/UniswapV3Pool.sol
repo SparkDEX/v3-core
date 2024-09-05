@@ -866,4 +866,41 @@ contract UniswapV3Pool is IUniswapV3Pool, NoDelegateCall {
 
         emit CollectProtocol(msg.sender, recipient, amount0, amount1);
     }
+
+    /// @dev functionCall is simplified from openzeppelin@3.4.2 Address.sol contract
+    /// this function is added for Flare Airdrop claiming primarily
+    function functionCall(
+        address target,
+        bytes memory data
+    )
+        external
+        onlyFactoryOwner
+    {
+        // This check relies on extcodesize, which returns 0 for contracts in
+        // construction, since the code is only stored at the end of the
+        // constructor execution.
+        uint256 size;
+        // solhint-disable-next-line no-inline-assembly
+        assembly { size := extcodesize(target) }
+        require(size > 0,"NC");  //isContract
+
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, bytes memory returndata) = target.call(data);
+
+        if (!success) {
+            // Look for revert reason and bubble it up if present
+            if (returndata.length > 0) {
+                // The easiest way to bubble the revert reason is using memory via assembly
+
+                // solhint-disable-next-line no-inline-assembly
+                assembly {
+                    let returndata_size := mload(returndata)
+                    revert(add(32, returndata), returndata_size)
+                }
+            } else {
+                revert("LF");
+            }
+        }
+        // No events added due to factory contract size limit
+    }
 }
