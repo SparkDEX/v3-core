@@ -21,14 +21,14 @@ contract UniswapV3Factory is IUniswapV3Factory, UniswapV3PoolDeployer, NoDelegat
 
     constructor() {
         owner = msg.sender;
-        emit OwnerChanged(address(0), msg.sender);
+        // emit OwnerChanged(address(0), msg.sender);
 
         feeAmountTickSpacing[500] = 10;
-        emit FeeAmountEnabled(500, 10);
+        // emit FeeAmountEnabled(500, 10);
         feeAmountTickSpacing[3000] = 60;
-        emit FeeAmountEnabled(3000, 60);
+        // emit FeeAmountEnabled(3000, 60);
         feeAmountTickSpacing[10000] = 200;
-        emit FeeAmountEnabled(10000, 200);
+        // emit FeeAmountEnabled(10000, 200);
     }
 
     /// @inheritdoc IUniswapV3Factory
@@ -53,7 +53,7 @@ contract UniswapV3Factory is IUniswapV3Factory, UniswapV3PoolDeployer, NoDelegat
     /// @inheritdoc IUniswapV3Factory
     function setOwner(address _owner) external override {
         require(msg.sender == owner);
-        emit OwnerChanged(owner, _owner);
+        // emit OwnerChanged(owner, _owner);
         owner = _owner;
     }
 
@@ -68,6 +68,6 @@ contract UniswapV3Factory is IUniswapV3Factory, UniswapV3PoolDeployer, NoDelegat
         require(feeAmountTickSpacing[fee] == 0);
 
         feeAmountTickSpacing[fee] = tickSpacing;
-        emit FeeAmountEnabled(fee, tickSpacing);
+        // emit FeeAmountEnabled(fee, tickSpacing);
     }
 }

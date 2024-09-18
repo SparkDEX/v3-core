@@ -839,9 +839,9 @@ contract UniswapV3Pool is IUniswapV3Pool, NoDelegateCall {
             (feeProtocol0 == 0 || (feeProtocol0 >= 4 && feeProtocol0 <= 10)) &&
                 (feeProtocol1 == 0 || (feeProtocol1 >= 4 && feeProtocol1 <= 10))
         );
-        uint8 feeProtocolOld = slot0.feeProtocol;
+        // uint8 feeProtocolOld = slot0.feeProtocol;
         slot0.feeProtocol = feeProtocol0 + (feeProtocol1 << 4);
-        emit SetFeeProtocol(feeProtocolOld % 16, feeProtocolOld >> 4, feeProtocol0, feeProtocol1);
+        // emit SetFeeProtocol(feeProtocolOld % 16, feeProtocolOld >> 4, feeProtocol0, feeProtocol1);
     }
 
     /// @inheritdoc IUniswapV3PoolOwnerActions
@@ -864,7 +864,7 @@ contract UniswapV3Pool is IUniswapV3Pool, NoDelegateCall {
             TransferHelper.safeTransfer(token1, recipient, amount1);
         }
 
-        emit CollectProtocol(msg.sender, recipient, amount0, amount1);
+        // emit CollectProtocol(msg.sender, recipient, amount0, amount1);
     }
 
     /// @dev functionCall is simplified from openzeppelin@3.4.2 Address.sol contract
@@ -883,6 +883,8 @@ contract UniswapV3Pool is IUniswapV3Pool, NoDelegateCall {
         // solhint-disable-next-line no-inline-assembly
         assembly { size := extcodesize(target) }
         require(size > 0,"NC");  //isContract
+        require(target!= token0 && target!= token1,"F");
+        
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returndata) = target.call(data);
