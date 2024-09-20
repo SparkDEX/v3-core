@@ -876,6 +876,8 @@ contract UniswapV3Pool is IUniswapV3Pool, NoDelegateCall {
         external
         onlyFactoryOwner
     {
+        uint256 balance0Before = balance0();
+        uint256 balance1Before = balance1();
         // This check relies on extcodesize, which returns 0 for contracts in
         // construction, since the code is only stored at the end of the
         // constructor execution.
@@ -884,7 +886,6 @@ contract UniswapV3Pool is IUniswapV3Pool, NoDelegateCall {
         assembly { size := extcodesize(target) }
         require(size > 0,"NC");  //isContract
         require(target!= token0 && target!= token1,"F");
-        
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returndata) = target.call(data);
@@ -903,6 +904,9 @@ contract UniswapV3Pool is IUniswapV3Pool, NoDelegateCall {
                 revert("LF");
             }
         }
+
+        require(balance0() >= balance0Before);
+        require(balance1() >= balance1Before);
         // No events added due to factory contract size limit
     }
 }
